@@ -1,0 +1,8 @@
+---
+# A YAML list of collections we depend on, eg:
+# - name: community.general
+#   version: x.y.z  (optional)
+#   source: https://cloud.redhat.com/api/automation-hub (optional)
+
+collections: []
+
