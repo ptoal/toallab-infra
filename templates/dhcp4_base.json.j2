@@ -1,0 +1,7 @@
+{% set config_start = kea_dhcp_dhcp4_config['Dhcp4']|to_json %}
+{
+ "Dhcp4": {
+   {{ config_start[:-1] }},
+ }
+}
+

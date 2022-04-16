@@ -1,0 +1,3 @@
+python38-devel
+libpq-devel
+postgresql

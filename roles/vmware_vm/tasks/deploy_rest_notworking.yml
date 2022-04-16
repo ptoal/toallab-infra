@@ -1,0 +1,66 @@
+---
+# tasks file for toallab.vmware_vm.deploy
+- block:
+  - name: Retrieve Cluster ID
+    vmware.vmware_rest.vcenter_cluster_info:
+      filter_names:
+      - "{{ vmware_vm_deploy_placement.cluster }}"
+    register: vmware_vm_cluster
+
+  - name: Retrieve Folder
+    vmware.vmware_rest.vcenter_folder_info:
+      filter_type: VIRTUAL_MACHINE
+      filter_names: "{{ vmware_vm_deploy_placement.folder }}"
+    register: vmware_vm_folder
+  
+  - name: Retrieve Datastore
+    vmware.vmware_rest.vcenter_datastore_info:
+      filter_names: "{{ vmware_vm_deploy_placement.datastore }}"
+    register: vmware_vm_datastore
+  
+  - name: Get the dvswitch called my-portgroup
+    vmware.vmware_rest.vcenter_network_info:
+      filter_types: DISTRIBUTED_PORTGROUP
+      filter_names: 
+        - "dvportgroup-2005"
+    register: vmware_vm_portgroup
+
+  - name: "VM Deployed -- {{ vmware_vm_deploy_name }}"
+    vmware.vmware_rest.vcenter_vm:
+      placement:
+        cluster: "{{ vmware_vm_cluster.value[0].cluster }}"
+        datastore: "{{ vmware_vm_datastore.value[0].datastore }}"
+        folder: "{{ vmware_vm_folder.value[0].folder }}"
+      name: "{{ vmware_vm_deploy_name }}"
+      guest_OS: "{{ vmware_vm_deploy_guest_os }}"
+      cpu:
+        count: "{{ vmware_vm_deploy_template.vcpu }}"
+      memory:
+        size_MiB: "{{ vmware_vm_deploy_template.memory * 1024 }}"
+      state: present
+    register: vm_result
+  
+  - block:
+    - name: Find VM
+      register: vm_search_result
+      vmware.vmware_rest.vcenter_vm_info:
+        filter_names:
+        - "{{ vmware_vm_deploy_name }}"
+        
+    - name: Collect information about a specific VM
+      vmware.vmware_rest.vcenter_vm_info:
+        vm: '{{ vm_search_result.value[0].vm }}'
+      register: vm_result
+      
+    when: not vm_result.changed
+      
+  - name: Attach NICs
+    vmware.vmware_rest.vcenter_vm_hardware_ethernet:
+      vm: '{{ vm_result.id }}'
+      backing:
+        type: DISTRIBUTED_PORTGROUP
+        network: "{{ vmware_vm_portgroup }}"
+      start_connected: true
+    register: vm_hardware_ethernet_1
+
+  delegate_to: localhost 

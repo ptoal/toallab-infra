@@ -1,0 +1,56 @@
+# Build Stork Packages
+# This was designed to build Stork on ARM platforms.  Use AWS c6g for a build server.
+
+- name: Build Stork Packages
+  hosts: stork_build
+  become: true
+
+  tasks:
+    - name: RPM Key for ISC
+      rpm_key:
+        state: present
+        fingerprint: 7AB5064B08F069A1A5CC500C77F64EC28053D1FB
+        key: https://dl.cloudsmith.io/public/isc/stork/gpg.77F64EC28053D1FB.key
+    
+    - name: Dependent packages    
+      dnf:
+        name:
+         - git
+         - python3-sphinx
+         - python3-sphinx_rtd_theme
+         - rubygem-rake
+         - ruby-devel
+         - rpm-build
+         - java-latest-openjdk
+         - "@Development Tools"
+         - docker
+         - wget
+         - tar
+
+    - name: dependent gem
+      community.general.gem:
+        name: fpm
+        include_doc: false
+        user_install: false
+        state: present
+
+    - name: Stork Sources
+      git:
+        repo: "https://gitlab.isc.org/isc-projects/stork"
+        dest: /home/ansible/stork
+        update: no
+
+    - name: docker started
+      service:
+        name: docker
+        state: started
+
+    - name: Build Stork
+      command: rake deb_agent rpm_agent rpm_server deb_server
+      args:
+        chdir: /home/ansible/stork
+
+    - name: Stork RPM installed
+      dnf:
+        name: https://dl.cloudsmith.io/public/isc/stork/rpm/any-distro/any-version/x86_64/isc-stork-server-0.18.0.210601095526-1.x86_64.rpm
+        state: present

@@ -1,0 +1,46 @@
+argument_specs:
+  deploy:
+    short_description: Deploy a new VM in vCenter
+      - The deploy entry point will create a new VM in vCenter.
+    options:
+      vmware_vm_deploy_name:
+        description: The name of the VM to create
+        required: true
+      vmware_vm_deploy_guest_os:
+        description: Guest OS from vmware_rest.vcenter_vm_module
+        required: true
+      vmware_vm_deploy_template:
+        option-name: deploy_template
+        description: >-
+          A dictionary of default parameters to build the VM.
+          See examples in defaults/templates.yml.
+        required: true
+        options:
+          vcpu:
+            description: Number of vCPU's to assign to the VM
+            type: int
+            required: true
+            default: 2
+          memory:
+            description: Memory to assign to the VM in GB
+            type: int
+            required: true
+            default: 1
+      vmware_vm_deploy_placement:
+        option-name: placement
+        description: >-
+          A dictionary containing information on the cluster, datastore, and folder
+          for the VM to be deployed on.
+        required: true
+        options:
+          cluster:
+            required: true
+          datastore:
+            required: true
+          folder:
+            required: true
+      vmware_vm_deploy_networks:
+        option-name: networks
+        description: A list containing a list of Networks that NICs should be created for
+        required: false
+        type: list

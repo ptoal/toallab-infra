@@ -1,0 +1,6 @@
+---
+- hosts: service_dhcp
+  become: true
+
+  roles:
+    - ptoal.kea-dhcp

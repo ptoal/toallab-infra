@@ -1,0 +1,2 @@
+SSH_AUTH_SOCK=/run/user/1000/keyring/.ssh; export SSH_AUTH_SOCK;
+echo Agent pid 214882;

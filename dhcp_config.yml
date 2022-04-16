@@ -1,0 +1,34 @@
+---
+- name: Gather Subnet info from netbox
+  hosts: service_dhcp
+  collections:
+   - ansible.netcommon
+   - netbox.netbox
+
+  tasks:
+    - name: List of Subnets in Netbox to serve via dhcp.
+      set_fact:
+        dhcp_subnets: "{{ dhcp_subnets | default([]) + [{
+        'subnet': item.value.prefix,
+        'next-server' : '192.168.90.2'
+
+        }]}}"
+      loop: "{{ query('netbox.netbox.nb_lookup', 'prefixes',
+                    api_endpoint=netbox_api, token=netbox_token,
+                    api_filter='tag=dhcp') }}"
+   
+  
+    - debug:
+        var: dhcp_subnets
+
+    - name: Kea DHCP4 - Base Configuration
+      template:
+        src: dhcp4_base.json.j2
+        dest: /tmp/kea-dhcp4.conf
+        mode: 0644
+        
+    # - name: Kea DHCP4 - Subnet Configurations
+    #   copy:
+    #     content: "{{ dhcp_subnets|to_nice_json() }}"
+    #     dest: /tmp/subnetdata.json
+    #     mode: 0644

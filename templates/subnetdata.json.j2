@@ -1,0 +1,13 @@
+[
+{% for subnet in dhcp_subnets %}
+{
+"subnet": "{{ subnet.ip }}/{{ subnet.netmask }}",
+"next-server": "{{ dhcp_next_server }}",
+"reservations": [
+{ "hw-address" : "{{ dhcp_hw_address }}",
+  "ip-address" : "{{ dhcp_server_ip_address }}" 
+}
+]
+}
+{% endfor %}
+]

@@ -1,0 +1,22 @@
+---
+# tasks file for toallab.vmware_vm.deploy
+- name: "VM Deployed -- {{ vmware_vm_deploy_name }}"
+  community.vmware.vmware_guest:
+    datacenter: "{{ vmware_vm_deploy_placement.datacenter }}"
+    cluster: "{{ vmware_vm_deploy_placement.cluster }}"
+    datastore: "{{ vmware_vm_deploy_placement.datastore }}"
+    folder: "{{ vmware_vm_deploy_placement.datacenter + '/vm/' + vmware_vm_deploy_placement.folder }}"
+    name: "{{ vmware_vm_deploy_name }}"
+    guest_id: "{{ vmware_vm_deploy_guest_os }}"
+    hardware:
+      num_cpus: "{{ vmware_vm_deploy_template.vcpu }}"
+      memory_mb: "{{ vmware_vm_deploy_template.memory * 1024 }}"
+    networks:
+      - name: Infrastructure
+        dvswitch_name: LabDSwitch
+      - name: Management
+        dvswitch_name: LabDSwitch
+    disk: "{{ vmware_vm_deploy_disks }}"
+    state: present
+  register: vm_result
+  delegate_to: localhost 

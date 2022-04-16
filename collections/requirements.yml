@@ -4,5 +4,38 @@
 #   version: x.y.z  (optional)
 #   source: https://cloud.redhat.com/api/automation-hub (optional)
 
-collections: []
+roles:
+# Infra
+  - name: ptoal.kea-dhcp
+    src: git+https://github.com/ptoal/ansible-kea-dhcp.git
+    version: f34
 
+collections:
+  - name: netbox.netbox
+    source: https://galaxy.ansible.com
+
+  - name: community.vmware 
+
+  - name: ansible.netcommon
+    source: https://galaxy.ansible.com
+
+  - name: cloud.common
+    source: https://cloud.redhat.com/api/automation-hub/
+
+  - name: vmware.vmware_rest
+    source: https://cloud.redhat.com/api/automation-hub/
+
+  - name: community.postgresql
+    source: https://galaxy.ansible.com
+
+  - name: community.general
+    source: https://galaxy.ansible.com
+
+  - name: redhat_cop.controller_configuration
+    source: https://galaxy.ansible.com
+
+  - name: redhat_cop.ee_utilities
+    source: https://galaxy.ansible.com
+
+  - name: ansible.tower
+    source: https://cloud.redhat.com/api/automation-hub/

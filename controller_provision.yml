@@ -1,0 +1,11 @@
+---
+- name: Configure Controller
+  hosts: localhost
+  connection: local
+  vars:
+    controller_validate_certs: false
+    controller_hostname: aap-control1.mgmt.toal.ca
+    
+  collections:
+    - ansible.tower
+

@@ -1,0 +1,6 @@
+aiohttp
+pynetbox
+netaddr
+packaging
+psycopg2
+git+https://github.com/vmware/vsphere-automation-sdk-python.git
