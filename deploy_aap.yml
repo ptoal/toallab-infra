@@ -7,6 +7,26 @@
     - ansible.builtin.include_role:
         name: vmware_vm
         tasks_from: deploy
+        apply:
+          delegate_to: localhost
+
+    - ansible.builtin.debug:
+        var: vmware_vm_deploy_result
+
+    - name: "Create host in satellite"
+      redhat.satellite.host:
+        name: "{{ inventory_hostname }}"
+        hostgroup: "{{ satellite_hostgroup }}"
+        organization: "{{ satellite_organization }}"
+        location: "{{ satellite_location }}"
+        mac: "{{ vmware_vm_deploy_result.instance.hw_eth0.macaddress }}"
+        interfaces_attributes:
+          - mac: "{{ vmware_vm_deploy_result.instance.hw_eth0.macaddress }}"
+            type: interface
+            name: "{{ inventory_hostname }}"
+        build: true
+        state: present
+      delegate_to: localhost
 
 #- name: Add VM to Satellite
 #- name: DNS

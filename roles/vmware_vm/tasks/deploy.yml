@@ -18,5 +18,4 @@
         dvswitch_name: LabDSwitch
     disk: "{{ vmware_vm_deploy_disks }}"
     state: present
-  register: vm_result
-  delegate_to: localhost 
+  register: vmware_vm_deploy_result
