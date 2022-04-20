@@ -34,10 +34,13 @@ collections:
   - name: redhat_cop.controller_configuration
     source: https://galaxy.ansible.com
 
+  - name: redhat_cop.ah_configuration
+    source: https://galaxy.ansible.com
+
   - name: redhat_cop.ee_utilities
     source: https://galaxy.ansible.com
 
-  - name: ansible.tower
+  - name: ansible.controller
     source: https://cloud.redhat.com/api/automation-hub/
 
   - name: redhat.satellite
